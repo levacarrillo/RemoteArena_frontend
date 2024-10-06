@@ -1,0 +1,21 @@
+.app {
+    height: 100vh;
+    header {
+        background-color: #020617;
+        background-color: #212529;
+        color: white;
+    }
+    main {
+        padding: 25px 40px;
+    }
+
+    main > div {
+        display: flex;
+        height: 100%;
+        
+        .pumas-logo {
+            margin-bottom: 40px;
+            flex: 1;
+        }
+    }
+}

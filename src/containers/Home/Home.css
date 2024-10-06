@@ -1,0 +1,10 @@
+.home {
+    flex-direction: column;
+    h2 {
+        margin: 0;
+    }
+    h5.ant-typography {
+        font-weight: normal;
+        margin: 0 0 10px;
+    }
+}

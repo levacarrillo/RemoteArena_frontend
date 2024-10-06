@@ -1,0 +1,37 @@
+.navbar {
+    background-color: inherit;
+
+    .ant-menu-item {
+        .ant-menu-item-icon {
+            vertical-align: middle;
+        }
+        .ant-avatar {
+            width: 40px !important;  
+            height: 40px !important;
+
+            color: white;
+
+        }
+        &.logout {
+            .logout-button {
+                background-color: red;
+            }
+        }
+    }
+    .ant-menu-title-content {
+        color: white;
+    }
+}
+.ant-popover {
+    div.ant-popover-inner {
+        margin: 0;
+        padding: 5px;
+        .logout-button {
+            background-color: #212529;
+            color: white;
+        }
+        span {
+            text-decoration: underline;
+        }
+    }
+}
