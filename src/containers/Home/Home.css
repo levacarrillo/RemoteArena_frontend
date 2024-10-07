@@ -10,6 +10,14 @@
     .carousel {
         margin: 0;
         padding: 0;
+        h3 {
+            background-color: #212529 !important;
+            justify-content: center;
+            img {
+                width: inherit;
+                height: inherit;
+            }
+        }
         .carousel-buttons {
             button {
                 margin: 0 10px;

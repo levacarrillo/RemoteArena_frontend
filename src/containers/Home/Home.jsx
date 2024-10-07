@@ -103,7 +103,8 @@ export const Home = () => {
             <Title level={2}>Remote Arena</Title>
             <Title level={5}>Top view, programs and controllers</Title>
             <Row gutter={[14]} style={{ marginBottom: '10px' }}>
-                <Col sm={24} lg={12} className="carousel">
+                <Col lg={0} xl={0} xxl={1}></Col>
+                <Col sm={24} lg={12} xl={12} xxl={8} className="carousel">
                     <Carousel afterChange={onChange}>
                         <div>
                             <h3 style={contentStyle}>
@@ -127,6 +128,7 @@ export const Home = () => {
                         <Button>Next</Button>
                     </Flex>
                 </Col>
+                <Col lg={0} xl={0} xxl={1}></Col>
                 <Col sm={24} lg={12} className="control-panel">
                     <Row gutter={[2, 3]}>
                         <Col span={12}>
@@ -212,7 +214,11 @@ export const Home = () => {
                     </Row>
                 </Col>
             </Row>
-            <Table />
+            <Row>
+                <Col span={24} xxl={22}>
+                    <Table />
+                </Col>
+            </Row>
             <Modal
                 title="Assignment list"
                 open={isModalOpen}
