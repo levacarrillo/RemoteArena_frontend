@@ -103,7 +103,7 @@ export const Home = () => {
             <Title level={2}>Remote Arena</Title>
             <Title level={5}>Top view, programs and controllers</Title>
             <Row gutter={[14]} style={{ marginBottom: '10px' }}>
-                <Col span={12} className="carousel">
+                <Col sm={24} lg={12} className="carousel">
                     <Carousel afterChange={onChange}>
                         <div>
                             <h3 style={contentStyle}>
@@ -127,7 +127,7 @@ export const Home = () => {
                         <Button>Next</Button>
                     </Flex>
                 </Col>
-                <Col span={12} className="control-panel">
+                <Col sm={24} lg={12} className="control-panel">
                     <Row gutter={[2, 3]}>
                         <Col span={12}>
                             <Card title="Robot status">

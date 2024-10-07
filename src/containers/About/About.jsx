@@ -1,11 +1,13 @@
 import React from "react";
-import { Typography, Flex, Col, Row, Carousel } from "antd";
+import { Typography, Flex, Col, Row, Carousel, Button, Modal, Form, Input } from "antd";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { FormOutlined } from '@ant-design/icons';
 import './About.css';
 
 export const About = () => {
     const { Title } = Typography;
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [content, setContent] = useState({
         description: "",
         contact_name: "",
@@ -39,7 +41,7 @@ export const About = () => {
 
     return(
         <div className="about">
-            <Title level={2}>About us</Title>
+            <Title level={2}>About us <Button onClick={() => setIsModalOpen(true)} icon={<FormOutlined />}></Button></Title>
             <Row className="content">
                 <Col span={12}>
                     <p className="text">
@@ -65,6 +67,34 @@ export const About = () => {
             <Flex className="pumas-logo" align="flex-end">
                 <img  alt="Logo" src="https://biorobotics.fi-p.unam.mx/wp-content/uploads/2019/01/logo_white-300x287.png" />
             </Flex>
+            <Modal
+                open={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}
+                centered
+            >
+                <Form>
+                    <Form.Item
+                        label="Description"
+                        name="description"
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Contact name"
+                        name="contact_name"
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Contact email"
+                        name="contact_email"
+                    >
+                        <Input />
+                    </Form.Item>
+                </Form>
+
+            </Modal>
         </div>    
     );
 };

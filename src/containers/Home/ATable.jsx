@@ -1,4 +1,4 @@
-import { Table, Button } from "antd";
+import { Table, Button, Modal } from "antd";
 import axios from "axios";
 import {
     CheckCircleOutlined,
@@ -10,6 +10,8 @@ import { useState, useEffect } from "react";
 
 export const ATable = () => {
     const [dataSource, setDataSource] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const columns = [
         {
             title: 'id',
@@ -47,8 +49,14 @@ export const ATable = () => {
             key: 'actions',
             render: () => (
                 <>
-                    <Button icon={<FileSearchOutlined />} />
-                    <Button icon={<PlayCircleOutlined />} />
+                    <Button
+                        icon={<FileSearchOutlined/>}
+                        onClick={() => setIsModalOpen(true)}
+                    />
+                    <Button
+                        icon={<PlayCircleOutlined />}
+                        onClick={() => setIsModalOpen(true)}
+                    />
                 </>
             )
         },
@@ -80,5 +88,17 @@ export const ATable = () => {
         console.log(dataSource);
     }, []);
 
-    return (<Table columns={columns} dataSource={dataSource} />);
+    return (
+        <>
+            <Table columns={columns} dataSource={dataSource} />
+            <Modal
+                open={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}
+                centered
+            >
+                Todo content
+            </Modal>
+        </>
+    );
 };

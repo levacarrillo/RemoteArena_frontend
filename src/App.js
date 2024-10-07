@@ -6,6 +6,10 @@ import { About } from './containers/About/About';
 import { InternalError } from './containers/InternalError/InternalError';
 import { Calendar } from './containers/Calendar/Calendar';
 import { Home } from './containers/Home/Home';
+import { AdminStudents } from './containers/AdminStudents/AdminStudents';
+import { AdminProfessors } from './containers/AdminProfessors/AdminProfessors';
+import { AdminAssignments } from './containers/AdminAssignments/AdminAssignments';
+import { AdminAssignmentFiles } from './containers/AdminAssignmentFiles/AdminAssignmentFiles';
 import { NotFound } from './containers/NotFound/NotFound';
 
 import './App.css';
@@ -23,6 +27,10 @@ function App() {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Home />} />
+              <Route path="/adminStudents" element={<AdminStudents />} />
+              <Route path="/adminProfessors" element={<AdminProfessors />} />
+              <Route path="/adminAssignments" element={<AdminAssignments />} />
+              <Route path="/adminAssignmentFiles" element={<AdminAssignmentFiles />} />
               <Route path="/calendar" element={<Calendar />} />
               <Route path="/about" element={<About />} />
               <Route path="/error" element={<InternalError />} />

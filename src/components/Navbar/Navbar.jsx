@@ -39,15 +39,27 @@ export const Navbar = () => {
             children: [
                 {
                     label: (
-                        <a href='/files'>Files</a>
+                        <a href='/adminAssignments'>Assignments</a>
                     ),
-                    key: '/files'
+                    key: '/adminAssignments'
                 },
                 {
                     label: (
-                        <a href='/students'>Students</a>
+                        <a href='/adminAssignmentFiles'>Assignment Files</a>
                     ),
-                    key: '/students'
+                    key: '/adminAssignmentFiles'
+                },
+                {
+                    label: (
+                        <a href='/adminStudents'>Students</a>
+                    ),
+                    key: '/adminStudents'
+                },
+                {
+                    label: (
+                        <a href='/adminProfessors'>Professors</a>
+                    ),
+                    key: '/adminProfessors'
                 }
             ],
         },
