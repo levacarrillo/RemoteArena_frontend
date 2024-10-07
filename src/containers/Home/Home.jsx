@@ -1,5 +1,11 @@
 import React from "react";
-import { UploadOutlined } from '@ant-design/icons';
+import {
+    UploadOutlined,
+    SearchOutlined,
+    FileSearchOutlined,
+    CloseCircleOutlined,
+    CheckCircleOutlined
+} from '@ant-design/icons';
 import { 
     Typography, 
     Carousel, 
@@ -10,16 +16,23 @@ import {
     Button, 
     Checkbox, 
     Progress,
-    Table
+    Modal,
+    Form,
+    Input,
+    Select,
+    Upload,
+    Space
 } from "antd";
 import { useState, useEffect } from "react";
+import { ATable as Table } from "./ATable";
 import axios from "axios";
 import "./Home.css";
 
 export const Home = () => {
-    const { Title } = Typography;
+    const { Title, Text } = Typography;
 
     const [userList, setUserList] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const onChange = (currentSlide) => {
         console.log(currentSlide);
@@ -34,46 +47,7 @@ export const Home = () => {
         background: '#364d79',
       };
 
-    const columns = [
-        {
-            title: 'id',
-            dataIndex: 'id',
-            key: 'id'
-        },
-        {
-            title: 'document name',
-            dataIndex: 'document_name',
-            key: 'document_name'
-        },
-        {
-            title: 'homework',
-            dataIndex: 'homework',
-            key: 'homework'
-        },
-        {
-            title: 'status',
-            dataIndex: 'status',
-            key: 'status'
-        },
-        {
-            title: 'Upload date',
-            dataIndex: 'Upload date',
-            key: 'Upload date'
-        },
-        {
-            title: 'Test date',
-            dataIndex: 'Test date',
-            key: 'Test date'
-        },
-        {
-            title: 'Actions',
-            dataIndex: 'actions',
-            key: 'actions'
-        },
-    ];
-
     const getUserList = async () => {
-        console.log('waiting getUsers')
         axios.post('http://localhost:4000/get_users', {
             firstName: 'Fred'
         })
@@ -85,6 +59,40 @@ export const Home = () => {
         })
     };
 
+    const assignmentContent = (
+        <Flex vertical>
+            <Select placeholder="Select assingment"  />
+            <Text>Description:</Text>
+            <Text code>Due date</Text>
+            <Button icon={<FileSearchOutlined />} />
+        </Flex>
+    );
+
+    const assingment_file_uploader = (
+        <Form>
+            <Form.Item
+                label="Assignment"
+                name="assignment"
+            >
+                <Select />
+            </Form.Item>
+            <Form.Item
+                label="Description"
+                name="description"
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item
+                label="Upload file"
+                name="uploader"
+            >
+                <Upload>
+                    <Button icon={<UploadOutlined />}>Click to upload</Button>
+                </Upload>
+            </Form.Item>
+        </Form>
+    );
+
     useEffect(() => {
         getUserList();
         setUserList([])
@@ -94,7 +102,7 @@ export const Home = () => {
         <div className="home">
             <Title level={2}>Remote Arena</Title>
             <Title level={5}>Top view, programs and controllers</Title>
-            <Row>
+            <Row gutter={[14]} style={{ marginBottom: '10px' }}>
                 <Col span={12} className="carousel">
                     <Carousel afterChange={onChange}>
                         <div>
@@ -113,29 +121,31 @@ export const Home = () => {
                             </h3>
                         </div>
                     </Carousel>
-                    <Flex justify="center">
+                    <Flex justify="center" align="center" className="carousel-buttons" >
                         <Button>Prev</Button>
-                        <p>Mainly view</p>
+                        <p>Top view</p>
                         <Button>Next</Button>
                     </Flex>
                 </Col>
                 <Col span={12} className="control-panel">
-                    <Row>
+                    <Row gutter={[2, 3]}>
                         <Col span={12}>
-                            <Card 
-                                title="Robot status"
-                            >
+                            <Card title="Robot status">
                                 <dl>
                                     <dt>Robot selected: </dt>
                                     <dd>None</dd>
-                                    <dt>Robot temperature: </dt>
-                                    <dd>--</dd>
-
                                 </dl>
-                                <strong>Battery status: </strong>
+                                <dl>
+                                    <dt>Robot temperature: </dt>
+                                    <dd>--°C</dd>
+                                </dl>
+                                <dl>
+                                    <dt>Battery status:</dt>
+                                </dl>
                                 <Progress 
-                                    type="dashboard"
-                                    steps={8}
+                                    //type="dashboard"
+                                    //steps={8}
+                                    //size={[80]}
                                     percent={80}
                                     trailColor="rgba(0, 0, 0, 0.06)"
                                     strokeWidth={20}
@@ -143,9 +153,7 @@ export const Home = () => {
                             </Card>
                         </Col>
                         <Col span={12}>
-                            <Card 
-                                title="Actions"
-                            >
+                            <Card title="Actions">
                                 <Button>Run algorithm</Button>
                                 <Button>Run and record</Button>
                                 <Button>Stop algorithm</Button>
@@ -153,34 +161,68 @@ export const Home = () => {
                             </Card>
                         </Col>
                         <Col span={12}>
-                            <Card
-                                title="Basic Controls"
-                            >
+                            <Card title="Basic Controls">
                                 <strong>Move robot</strong>
-                                <Button>^</Button>
-                                <Button>&lt;</Button>
-                                <Button>||</Button>
-                                <Button>&gt;</Button>
-                                <Button>v</Button>
-                                <Checkbox>Turn on light 1</Checkbox>
-                                <Checkbox>Turn on light 2</Checkbox>
+                                <Flex justify="center">
+                                    <Button>^</Button>
+                                </Flex>
+                                <Flex justify="center" gap="3px">
+                                    <Button>&lt;</Button>
+                                    <Button>||</Button>
+                                    <Button>&gt;</Button>
+                                </Flex>
+                                <Flex justify="center">
+                                    <Button>v</Button>
+                                </Flex>
+                                <div className="checkbox-container">
+                                    <Checkbox>Turn on light 1</Checkbox>
+                                    <Checkbox>Turn on light 2</Checkbox>
+                                </div>
                             </Card>
                         </Col>
                         <Col span={12}>
                             <Card
-                                title="File manager"
+                                title={
+                                    <div className="assignments-title">
+                                        Assignments {
+                                            <Button
+                                                icon={<SearchOutlined />}
+                                                onClick={() => setIsModalOpen(true)}
+                                            />
+                                        }
+                                    </div>
+                                }
+                                className="assignments-card"
                             >
-                                <p>Select program to upload and test:</p>
-                                <Button icon={<UploadOutlined />}>Upload file</Button>
-                                <p>
-                                    <span>4 files uploaded</span>
-                                </p>
+                                <strong>Select program to upload and test:</strong>
+                                <Button
+                                    icon={<UploadOutlined />}
+                                    onClick={() => setIsModalOpen(true)}
+                                >
+                                    Upload assignment
+                                </Button>
+                                <Flex vertical style={{ margin: '0 0 0 auto'}}>
+                                    <Text><UploadOutlined /> 4 Files uploaded</Text>
+                                    <Text><CloseCircleOutlined /> 2 Not compiled </Text>
+                                    <Text><CheckCircleOutlined /> 1 Compiled</Text>
+                                    <Text><CheckCircleOutlined /> 1 File Tested</Text>
+                                </Flex>
                             </Card>
                         </Col>
                     </Row>
                 </Col>
             </Row>
-            <Table columns={columns}/>
+            <Table />
+            <Modal
+                title="Assignment list"
+                open={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}
+                centered
+            >
+                {assignmentContent}
+                {/* {assingment_file_uploader} */}
+            </Modal>
         </div>
     );
 };

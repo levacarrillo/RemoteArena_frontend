@@ -7,4 +7,62 @@
         font-weight: normal;
         margin: 0 0 10px;
     }
+    .carousel {
+        margin: 0;
+        padding: 0;
+        .carousel-buttons {
+            button {
+                margin: 0 10px;
+            }
+        }
+    }
+    .control-panel {
+        .ant-card {
+            height: 100%;
+            .ant-card-head {
+                padding:  0 20px;
+                min-height: 45px;
+                .assignments-title {
+                    button {
+                        border: none;
+                        border-radius: 50%;
+                        width: 20px;
+                    }
+                }
+            }
+            .ant-card-body {
+                display: flex;
+                flex-wrap: wrap;
+                flex-direction: column;
+                padding: 14px 20px;
+                button {
+                    margin-bottom: 3px;
+                }
+                .checkbox-container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    margin: 10px 0 0 0;
+                }
+            }
+            &.assignments-card {
+                .ant-card-body {
+                    button {
+                        margin: 14px 0;
+                    }
+                }
+            }
+        }
+        dl {
+            display: flex;
+            margin: 0 0 10px 0;
+            dt {
+                font-weight: bold;
+                margin-right: 4px;
+            }
+            dd {
+                margin: 0;
+            }
+        }
+    }
 }
