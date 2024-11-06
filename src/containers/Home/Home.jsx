@@ -23,7 +23,7 @@ import {
     Upload,
     Space
 } from "antd";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ATable as Table } from "./ATable";
 import axios from "axios";
 import "./Home.css";
@@ -31,12 +31,18 @@ import "./Home.css";
 export const Home = () => {
     const { Title, Text } = Typography;
 
+    const carouselRef = useRef(null);
+
     const [userList, setUserList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [carouselItems, setCarouselItems] = useState(['http://localhost:8080/stream?topic=/camera/image',
+                                                        'http://localhost:8080/stream?topic=/img_map_detection',
+                                                        'http://localhost:8080/stream?topic=/tracked_image']);
 
     const onChange = (currentSlide) => {
         console.log(currentSlide);
     };
+    
     const contentStyle = {
         margin: 0,
         width: '100%',
@@ -45,11 +51,60 @@ export const Home = () => {
         lineHeight: '160px',
         textAlign: 'center',
         background: '#364d79',
-      };
+    };
+    
+    const setLightBulbsState = async (checkValues) => {
+        axios.post('http://localhost:4000/set_light_bulbs_state', {
+            lights: checkValues
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+    };
 
     const getUserList = async () => {
         axios.post('http://localhost:4000/get_users', {
             firstName: 'Fred'
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+    };
+    
+    const goToPrevious = () => {
+        carouselRef.current.prev();
+    };
+
+    const goToNext = () => {
+        carouselRef.current.next();
+    };
+
+    const onClickCheckbox = (checkValues) => {
+        console.log('checked=', checkValues);
+        setLightBulbsState(checkValues);
+    };
+
+    const runCommand = (cmd) => {
+        axios.post('http://localhost:4000/run_executable', {
+            command: cmd
+        })
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error)
+        })
+    };
+
+    const moveRobot = (cmd) => {
+        axios.post('http://localhost:4000/move_robot_command', {
+            command: cmd
         })
         .then(function(response) {
             console.log(response);
@@ -98,6 +153,7 @@ export const Home = () => {
         setUserList([])
     }, []);
 
+
     return (
         <div className="home">
             <Title level={2}>Remote Arena</Title>
@@ -105,27 +161,21 @@ export const Home = () => {
             <Row gutter={[14]} style={{ marginBottom: '10px' }}>
                 <Col lg={0} xl={0} xxl={1}></Col>
                 <Col sm={24} lg={12} xl={12} xxl={8} className="carousel">
-                    <Carousel afterChange={onChange}>
-                        <div>
-                            <h3 style={contentStyle}>
-                                <img src="http://localhost:8080/stream?topic=/camera/image" alt="" />
-                            </h3>
-                        </div>
-                        <div>
-                            <h3 style={contentStyle}>
-                                <img src="http://localhost:8080/stream?topic=/img_map_detection" alt="" />
-                            </h3>
-                        </div>
-                        <div>
-                            <h3 style={contentStyle}>
-                                <img src="http://localhost:8080/stream?topic=/tracked_image" alt="" />
-                            </h3>
-                        </div>
+                    <Carousel afterChange={onChange} ref={carouselRef}>
+                        {
+                            carouselItems.map((img) =>
+                                <div>
+                                    <h3 style={contentStyle}>
+                                        <img src={img} alt="" />
+                                    </h3>
+                                </div>
+                            )
+                        }
                     </Carousel>
                     <Flex justify="center" align="center" className="carousel-buttons" >
-                        <Button>Prev</Button>
+                        <Button onClick={goToPrevious}>Prev</Button>
                         <p>Top view</p>
-                        <Button>Next</Button>
+                        <Button onClick={goToNext}>Next</Button>
                     </Flex>
                 </Col>
                 <Col lg={0} xl={0} xxl={1}></Col>
@@ -156,30 +206,33 @@ export const Home = () => {
                         </Col>
                         <Col span={12}>
                             <Card title="Actions">
-                                <Button>Run algorithm</Button>
-                                <Button>Run and record</Button>
-                                <Button>Stop algorithm</Button>
-                                <Button>Return Home</Button>
+                                <Button onClick={() => runCommand('run_algorithm')}>Run algorithm</Button>
+                                <Button disabled onClick={() => runCommand('run_and_record')}>Run and record</Button>
+                                <Button onClick={() => runCommand('stop_algorithm')}>Stop algorithm</Button>
+                                <Button disabled onClick={() => runCommand('return_home')}>Return Home</Button>
                             </Card>
                         </Col>
                         <Col span={12}>
                             <Card title="Basic Controls">
                                 <strong>Move robot</strong>
                                 <Flex justify="center">
-                                    <Button>^</Button>
+                                    <Button onClick={() => moveRobot('foward')}>^</Button>
                                 </Flex>
                                 <Flex justify="center" gap="3px">
-                                    <Button>&lt;</Button>
-                                    <Button>||</Button>
-                                    <Button>&gt;</Button>
+                                    <Button onClick={() => moveRobot('left')}>&lt;</Button>
+                                    <Button onClick={() => moveRobot('stop')}>||</Button>
+                                    <Button onClick={() => moveRobot('right')}>&gt;</Button>
                                 </Flex>
                                 <Flex justify="center">
-                                    <Button>v</Button>
+                                    <Button onClick={() => moveRobot('backward')}>v</Button>
                                 </Flex>
-                                <div className="checkbox-container">
-                                    <Checkbox>Turn on light 1</Checkbox>
-                                    <Checkbox>Turn on light 2</Checkbox>
-                                </div>
+                                <Checkbox.Group
+                                    className="checkbox-container"
+                                    onChange={onClickCheckbox}
+                                >
+                                    <Checkbox value={1}>Turn on light 1</Checkbox>
+                                    <Checkbox value={2}>Turn on light 2</Checkbox>
+                                </Checkbox.Group>
                             </Card>
                         </Col>
                         <Col span={12}>
