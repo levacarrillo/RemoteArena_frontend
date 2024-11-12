@@ -53,13 +53,26 @@
                     margin: 10px 0 0 0;
                 }
             }
-            &.assignments-card {
+            &.control-test-card {
+                .ant-card-body {
+                    strong {
+                        margin-bottom: 12px;
+                    }
+                    .ant-row {
+                        margin-bottom: 20px;
+                    }
+                    button {
+                        width: -webkit-fill-available;
+                    }
+                }
+            }
+            /* &.assignments-card {
                 .ant-card-body {
                     button {
                         margin: 14px 0;
                     }
                 }
-            }
+            } */
         }
         dl {
             display: flex;

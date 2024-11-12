@@ -21,7 +21,9 @@ import {
     Input,
     Select,
     Upload,
-    Space
+    InputNumber,
+    FloatButton,
+    Tooltip
 } from "antd";
 import { useState, useEffect, useRef } from "react";
 import { ATable as Table } from "./ATable";
@@ -35,6 +37,7 @@ export const Home = () => {
 
     const [userList, setUserList] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loadingTest, setLoadingTest] = useState(false);
     const [carouselItems, setCarouselItems] = useState(['http://localhost:8080/stream?topic=/camera/image',
                                                         'http://localhost:8080/stream?topic=/img_map_detection',
                                                         'http://localhost:8080/stream?topic=/tracked_image']);
@@ -90,6 +93,26 @@ export const Home = () => {
         setLightBulbsState(checkValues);
     };
 
+    const onClickTest = () => {
+        setLoadingTest(!loadingTest);
+        if (!loadingTest) {
+            axios.post('http://localhost:4000/move_robot_to_pose', {
+                angle: Math.round(10000 * angle * Math.PI / 180) / 10000 ,
+                distance: distance *0.01
+            })
+            .then(function(response) {
+                console.log(response);
+                setLoadingTest(false);
+            })
+            .catch(function(error) {
+                console.log(error)
+                setLoadingTest(false);
+            })
+        } else {
+            runCommand('stop_algorithm');
+        }
+    };
+    
     const runCommand = (cmd) => {
         axios.post('http://localhost:4000/run_executable', {
             command: cmd
@@ -148,6 +171,9 @@ export const Home = () => {
         </Form>
     );
 
+    const [angle, setAngle] = useState(0);
+    const [distance, setDistance] = useState(0);
+
     useEffect(() => {
         getUserList();
         setUserList([])
@@ -156,6 +182,16 @@ export const Home = () => {
 
     return (
         <div className="home">
+            <Tooltip placement="bottom" title="Assigments">
+                <FloatButton
+                    onClick={() => setIsModalOpen(true)}
+                    style={{
+                        position: 'absolute',
+                        top: '6rem',
+                        right: '2rem'
+                    }}
+                />
+            </Tooltip>
             <Title level={2}>Remote Arena</Title>
             <Title level={5}>Top view, programs and controllers</Title>
             <Row gutter={[14]} style={{ marginBottom: '10px' }}>
@@ -236,7 +272,7 @@ export const Home = () => {
                             </Card>
                         </Col>
                         <Col span={12}>
-                            <Card
+                            {/* <Card
                                 title={
                                     <div className="assignments-title">
                                         Assignments {
@@ -262,6 +298,84 @@ export const Home = () => {
                                     <Text><CheckCircleOutlined /> 1 Compiled</Text>
                                     <Text><CheckCircleOutlined /> 1 File Tested</Text>
                                 </Flex>
+                            </Card> */}
+                            <Card
+                                title={"Control test"}
+                                className="control-test-card"
+                            >
+                                <Flex vertical justify="space-between">
+                                    <strong>Set angle and distance to test:</strong>
+                                    <Row gutter={[8, 8]}>
+                                        <Col span={7}>
+                                            <Text>Angle:</Text>
+                                        </Col>
+                                        <Col span={7}>
+                                            <InputNumber
+                                                defaultValue={0}
+                                                min={-259}
+                                                max={259}
+                                                formatter={(value) => `${value}°`}
+                                                parser={(value) => value?.replace('°', '')}
+                                                onChange={(value) => setAngle(value)}
+                                                style={{ display: 'table-cell'}}
+                                            />
+                                        </Col>
+                                        <Col span={10}>
+                                            <InputNumber
+                                                defaultValue={0}
+                                                min={-259}
+                                                max={259}
+                                                value={Math.round(10000 * angle * Math.PI / 180) / 10000}
+                                                formatter={(value) => `${value} rad`}
+                                                parser={(value) => value?.replace(' rad', '')}
+                                                style={{ display: 'table-cell'}}
+                                                disabled
+                                            />
+                                        </Col>
+                                        <Col span={7}>
+                                            <Text>Distance:</Text>
+                                        </Col>
+                                        <Col span={7}>
+                                            <InputNumber
+                                                defaultValue={0}
+                                                min={-30}
+                                                max={30}
+                                                formatter={(value) => `${value} cm`}
+                                                parser={(value) => value?.replace(' cm', '')}
+                                                onChange={value => setDistance(value)}
+                                                style={{ display: 'table-cell'}}
+                                            />
+                                        </Col>
+                                        <Col span={10}>
+                                            <InputNumber
+                                                defaultValue={0}
+                                                min={-30}
+                                                max={30}
+                                                value={distance * 0.01}
+                                                formatter={(value) => `${value} m`}
+                                                parser={(value) => value?.replace(' m', '')}
+                                                style={{ display: 'table-cell'}}
+                                                disabled
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Flex justify="space-around" gap={12} style={{ margin: '0 6px'}}>
+                                            <Button
+                                                // type="primary"
+                                                onClick={onClickTest}
+                                                loading={loadingTest}
+                                            >
+                                                Run test
+                                            </Button>
+                                            <Button
+                                                // type="primary"
+                                                onClick={onClickTest}
+                                                disabled={!loadingTest}
+                                            >
+                                                Stop
+                                            </Button>
+                                    </Flex>
+                                </Flex>
                             </Card>
                         </Col>
                     </Row>
@@ -273,14 +387,37 @@ export const Home = () => {
                 </Col>
             </Row>
             <Modal
-                title="Assignment list"
+                // title="Assignment list"
+                title={
+                    <div className="assignments-title">
+                    Assignments {
+                        <Button
+                            icon={<SearchOutlined />}
+                            onClick={() => setIsModalOpen(true)}
+                        />
+                    }
+                    </div>
+                }
                 open={isModalOpen}
                 onOk={() => setIsModalOpen(false)}
                 onCancel={() => setIsModalOpen(false)}
                 centered
             >
                 {assignmentContent}
-                {/* {assingment_file_uploader} */}
+                {assingment_file_uploader}
+                <strong>Select program to upload and test:</strong>
+                <Button
+                    icon={<UploadOutlined />}
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    Upload assignment
+                </Button>
+                <Flex vertical style={{ margin: '0 0 0 auto'}}>
+                    <Text><UploadOutlined /> 4 Files uploaded</Text>
+                    <Text><CloseCircleOutlined /> 2 Not compiled </Text>
+                    <Text><CheckCircleOutlined /> 1 Compiled</Text>
+                    <Text><CheckCircleOutlined /> 1 File Tested</Text>
+                </Flex>
             </Modal>
         </div>
     );
