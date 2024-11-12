@@ -111,7 +111,7 @@ export const Home = () => {
                 setLoadingTest(false);
             })
         } else {
-            runCommand('stop_algorithm');
+            runCommand('stop');
         }
     };
     
@@ -246,7 +246,7 @@ export const Home = () => {
                             <Card title="Actions">
                                 <Button onClick={() => runCommand('run_algorithm')}>Run algorithm</Button>
                                 <Button disabled onClick={() => runCommand('run_and_record')}>Run and record</Button>
-                                <Button onClick={() => runCommand('stop_algorithm')}>Stop algorithm</Button>
+                                <Button onClick={() => runCommand('stop')}>Stop algorithm</Button>
                                 <Button disabled onClick={() => runCommand('return_home')}>Return Home</Button>
                             </Card>
                         </Col>
