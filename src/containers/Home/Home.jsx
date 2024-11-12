@@ -40,7 +40,9 @@ export const Home = () => {
     const [loadingTest, setLoadingTest] = useState(false);
     const [carouselItems, setCarouselItems] = useState(['http://localhost:8080/stream?topic=/camera/image',
                                                         'http://localhost:8080/stream?topic=/img_map_detection',
-                                                        'http://localhost:8080/stream?topic=/tracked_image']);
+                                                        'http://localhost:8080/stream?topic=/tracked_image',
+                                                        'http://localhost:8080/stream?topic=/usb_cam_node/image_raw',
+                                                ]);
 
     const onChange = (currentSlide) => {
         console.log(currentSlide);
